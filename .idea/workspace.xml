@@ -4,24 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85316f0c-94c7-4638-a245-00fcf82cbaaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Projekt - pokojove rostliny.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kvetiny-spatne-datum.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kvetiny-spatne-frekvence.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kvetiny.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Plant.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/PlantException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/PlantList.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Settings.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/WateringDateComparator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vystup.txt" afterDir="false" />
+    <list default="true" id="85316f0c-94c7-4638-a245-00fcf82cbaaf" name="Changes" comment="//Pokojové rostliny - prvni projekt">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Plant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Plant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PlantList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PlantList.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,6 +61,19 @@
       <option name="presentableId" value="Default" />
       <updated>1729238781551</updated>
     </task>
+    <task id="LOCAL-00001" summary="//Pokojové rostliny - prvni projekt">
+      <option name="closed" value="true" />
+      <created>1730968087766</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1730968087766</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="//Pokojové rostliny - prvni projekt" />
+    <option name="LAST_COMMIT_MESSAGE" value="//Pokojové rostliny - prvni projekt" />
   </component>
 </project>

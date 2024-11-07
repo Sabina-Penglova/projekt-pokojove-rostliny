@@ -6,15 +6,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class PlantList {
-    private List<Plant> plantsList = new ArrayList();
+    private final List<Plant> plantsList = new ArrayList<>();
 
     //region Knstruktory
     public PlantList() {
         this.plantsList.addAll(this.plantsList);
-    }
-
-    public PlantList(List<Plant> plantsList) {
-        this.plantsList.addAll(plantsList);
     }
 
     public List<Plant> getPlantsList() {
@@ -31,10 +27,6 @@ public class PlantList {
     //Metoda pro vymazání kytky s daným indexem
     public void removeItem(int indexOfPlant) {
         this.plantsList.remove(indexOfPlant);
-    }
-
-    public Plant getItem(int indexOfPlant) {
-        return (Plant) this.plantsList.get(indexOfPlant);
     }
 
     //Metoda pro vypsání informace o všech kytkách v daném seznamu
@@ -72,28 +64,28 @@ public class PlantList {
         }
         String name = blocks[0].trim();
         String note = blocks[1].trim();
-        int frequencyOfWatering = 0;
+        int frequencyOfWatering;
         try {
             frequencyOfWatering = Integer.parseInt(blocks[2].trim());
         } catch (NumberFormatException e) {
             throw new PlantException("Nesprávně zadaný formát intervalu zálivky \"" + blocks[2] + "\" na řádku " + lineNumber + ". Zadaná hodnota musí být celé číslo!");
         }
 
-        LocalDate watering = null;
+        LocalDate watering;
         try {
             watering = LocalDate.parse(blocks[3].trim());
         } catch (DateTimeParseException e) {
             throw new PlantException("Nesprávně zadaný formát data zálivky \"" + blocks[3] + "\" na řádku " + lineNumber + ". Zadaná hodnota musí být ve formátu YYYY-MM-DD !");
         }
 
-        LocalDate planted = null;
+        LocalDate planted;
         try {
             planted = LocalDate.parse(blocks[4].trim());
         } catch (DateTimeParseException e) {
             throw new PlantException("Nesprávně zadaný formát data zasazenní \"" + blocks[4] + "\" na řádku " + lineNumber + ". Zadaná hodnota musí být ve formátu YYYY-MM-DD !");
         }
 
-        Plant newPlant = null;
+        Plant newPlant;
         try {
             newPlant = new Plant(name, note, planted, watering, frequencyOfWatering);
         } catch (Plant.PlantException e) {

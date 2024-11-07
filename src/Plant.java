@@ -2,9 +2,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Plant implements Comparable<Plant>{
-    private String name;
-    private String notes;
-    private LocalDate planted;
+    private final String name;
+    private final String notes;
+    private final LocalDate planted;
     private LocalDate watering;
     private int frequencyOfWatering;
 
@@ -17,34 +17,18 @@ public class Plant implements Comparable<Plant>{
         this.setFrequencyOfWatering(frequencyOfWatering);
     }
 
-    public void doWateringNow() {
-        this.watering = LocalDate.now();
-    }
-
 
     //region Přístupové metody dle zadání s ošetřenýma podmínkama
     public String getName() {
         return this.name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getNotes() {
         return this.notes;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
     public LocalDate getPlanted() {
         return this.planted;
-    }
-
-    public void setPlanted(LocalDate planted) {
-        this.planted = planted;
     }
 
     public LocalDate getWatering() {
@@ -77,7 +61,7 @@ public class Plant implements Comparable<Plant>{
 
         return "Název květiny: " + this.getName() +
                 ", Datum poslední zálivky: " + this.getWatering().format(DateTimeFormatter.ofPattern("d.M.uuuu")) +
-                ", Datum doporučené další zálivky: " + this.getWatering().plusDays((long) this.getFrequencyOfWatering()).format(DateTimeFormatter.ofPattern("d.M.uuuu"));
+                ", Datum doporučené další zálivky: " + this.getWatering().plusDays(this.getFrequencyOfWatering()).format(DateTimeFormatter.ofPattern("d.M.uuuu"));
     }
 
 
@@ -86,13 +70,10 @@ public class Plant implements Comparable<Plant>{
         return this.getName().compareTo(otherPlant.getName());
     }
 
-    public LocalDate getLastWatering() {
-        return null;
-    }
+    public static class PlantException extends Throwable {
 
-    public class PlantException extends Throwable {
         public PlantException(String s) {
-
         }
+
     }
 }
