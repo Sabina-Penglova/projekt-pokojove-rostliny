@@ -1,79 +1,84 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Plant implements Comparable<Plant>{
-    private final String name;
-    private final String notes;
-    private final LocalDate planted;
+public class Plant implements Comparable<Plant> {
+    private String name;
+    private String notes;
+    private LocalDate planted;
     private LocalDate watering;
     private int frequencyOfWatering;
 
-    //region Konstruktory pro vytvoření kytky dle zadání
+    // Konstruktory
     public Plant(String name, String notes, LocalDate planted, LocalDate watering, int frequencyOfWatering) throws PlantException {
+        if (frequencyOfWatering <= 0) {
+            throw new PlantException("Frekvence zálivky musí být větší než 0.");
+        }
+        if (watering.isBefore(planted)) {
+            throw new PlantException("Datum zálivky nemůže být před datem zasazení.");
+        }
         this.name = name;
         this.notes = notes;
         this.planted = planted;
-        this.setWatering(watering);
-        this.setFrequencyOfWatering(frequencyOfWatering);
+        this.watering = watering;
+        this.frequencyOfWatering = frequencyOfWatering;
     }
 
+    public Plant(String name) throws PlantException {
+        this(name, "", LocalDate.now(), LocalDate.now(), 7);
+    }
 
-    //region Přístupové metody dle zadání s ošetřenýma podmínkama
+    public Plant(String name, String notes, LocalDate planted, LocalDate watering) throws PlantException {
+        this(name, notes, planted, watering, 7);
+    }
+
+    // Přístupové metody
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public String getNotes() {
-        return this.notes;
+        return notes;
     }
 
     public LocalDate getPlanted() {
-        return this.planted;
+        return planted;
     }
 
     public LocalDate getWatering() {
-        return this.watering;
-    }
-
-    public void setWatering(LocalDate watering) throws PlantException {
-        if (watering.isBefore(this.getPlanted())) {
-            throw new PlantException("Datum zálivky musí být před datem zasazení nebo v den zasazení.");
-        } else {
-            this.watering = watering;
-        }
+        return watering;
     }
 
     public int getFrequencyOfWatering() {
-        return this.frequencyOfWatering;
+        return frequencyOfWatering;
     }
 
     public void setFrequencyOfWatering(int frequencyOfWatering) throws PlantException {
         if (frequencyOfWatering <= 0) {
             throw new PlantException("Zadaná hodnota frekvence zálivky musí být větší než nula.");
-        } else {
-            this.frequencyOfWatering = frequencyOfWatering;
+        }
+        this.frequencyOfWatering = frequencyOfWatering;
+    }
+
+    // Metody
+    public String getWateringInfo() {
+        return "Název: " + name +
+                ", Poslední zálivka: " + watering.format(DateTimeFormatter.ofPattern("d.M.uuuu")) +
+                ", Další zálivka: " + watering.plusDays(frequencyOfWatering).format(DateTimeFormatter.ofPattern("d.M.uuuu"));
+    }
+
+    public void doWateringNow() {
+        this.watering = LocalDate.now();
+    }
+
+    // Výjimka
+    public static class PlantException extends Exception {
+        public PlantException(String message) {
+            super(message);
         }
     }
-    //endregion
-
-    //Informace o kytce dle zadání s formátovaným výstupním datem
-    public String getWateringInfo() {
-
-        return "Název květiny: " + this.getName() +
-                ", Datum poslední zálivky: " + this.getWatering().format(DateTimeFormatter.ofPattern("d.M.uuuu")) +
-                ", Datum doporučené další zálivky: " + this.getWatering().plusDays(this.getFrequencyOfWatering()).format(DateTimeFormatter.ofPattern("d.M.uuuu"));
-    }
-
 
     @Override
-    public int compareTo(Plant otherPlant) {
-        return this.getName().compareTo(otherPlant.getName());
-    }
-
-    public static class PlantException extends Throwable {
-
-        public PlantException(String s) {
-        }
-
+    public int compareTo(Plant other) {
+        return this.name.compareTo(other.name);
     }
 }

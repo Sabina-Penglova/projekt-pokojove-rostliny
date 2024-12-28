@@ -2,114 +2,110 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
 public class PlantList {
     private final List<Plant> plantsList = new ArrayList<>();
 
-    //region Knstruktory
-    public PlantList() {
-        this.plantsList.addAll(this.plantsList);
-    }
-
     public List<Plant> getPlantsList() {
-        return this.plantsList;
-    }
-    //endregion
-
-    //Metoda pro přidání kytky
-    public void addPlant(Plant newPlant) {
-
-        this.plantsList.add(newPlant);
+        return new ArrayList<>(plantsList); // Kopie seznamu
     }
 
-    //Metoda pro vymazání kytky s daným indexem
-    public void removeItem(int indexOfPlant) {
-        this.plantsList.remove(indexOfPlant);
+    public List<Plant> getPlantsCopy() {
+        return new ArrayList<>(plantsList);
     }
 
-    //Metoda pro vypsání informace o všech kytkách v daném seznamu
+    public void addPlant(Plant plant) {
+        plantsList.add(plant);
+    }
+
+    public Plant getPlant(int index) throws Plant.PlantException {
+        if (index < 0 || index >= plantsList.size()) {
+            throw new Plant.PlantException("Neplatný index: " + index);
+        }
+        return plantsList.get(index);
+    }
+
+    public void removeItem(int index) throws Plant.PlantException {
+        if (index < 0 || index >= plantsList.size()) {
+            throw new Plant.PlantException("Neplatný index: " + index);
+        }
+        plantsList.remove(index);
+    }
+
+    public List<Plant> getPlantsToWater() {
+        List<Plant> plantsToWater = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        for (Plant plant : plantsList) {
+            if (plant.getWatering().plusDays(plant.getFrequencyOfWatering()).isBefore(today)) {
+                plantsToWater.add(plant);
+            }
+        }
+        return plantsToWater;
+    }
+
+    public void sortByName() {
+        Collections.sort(plantsList);
+    }
+
+    public void sortByWateringDate() {
+        plantsList.sort(new WateringDateComparator());
+    }
+
+    public static PlantList loadFromFile(String filename) throws Plant.PlantException {
+        PlantList plantList = new PlantList();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                parseLine(line, plantList);
+            }
+        } catch (IOException e) {
+            throw new Plant.PlantException("Chyba při načítání souboru: " + e.getMessage());
+        }
+        return plantList;
+    }
+
+    public static void saveToFile(String filename, PlantList plantList) throws Plant.PlantException {
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(filename)))) {
+            for (Plant plant : plantList.plantsList) {
+                writer.println(plant.getName() + "\t" +
+                        plant.getNotes() + "\t" +
+                        plant.getFrequencyOfWatering() + "\t" +
+                        plant.getWatering() + "\t" +
+                        plant.getPlanted());
+            }
+        } catch (IOException e) {
+            throw new Plant.PlantException("Chyba při ukládání souboru: " + e.getMessage());
+        }
+    }
+
+    private static void parseLine(String line, PlantList plantList) throws Plant.PlantException {
+        String[] parts = line.split("\\t");
+        if (parts.length != 5) {
+            throw new Plant.PlantException("Nesprávný formát řádku: " + line);
+        }
+
+        String name = parts[0].trim();
+        String notes = parts[1].trim();
+        int frequencyOfWatering;
+        LocalDate watering, planted;
+
+        try {
+            frequencyOfWatering = Integer.parseInt(parts[2].trim());
+            watering = LocalDate.parse(parts[3].trim());
+            planted = LocalDate.parse(parts[4].trim());
+        } catch (NumberFormatException | DateTimeParseException e) {
+            throw new Plant.PlantException("Chyba ve formátu dat: " + e.getMessage());
+        }
+
+        Plant plant = new Plant(name, notes, planted, watering, frequencyOfWatering);
+        plantList.addPlant(plant);
+    }
+
     public void printWateringInfo() {
-        for (Plant plant : getPlantsList()) {
+        for (Plant plant : plantsList) {
             System.out.println(plant.getWateringInfo());
         }
     }
-
-    //Metoda pro načtení kytek z textového souboru a jejich přidání do seznamu
-    public static PlantList loadFromFile(String filename) throws PlantException {
-        PlantList newPlantlist = new PlantList();
-        int lineNumber = 1;
-        try {
-            Scanner scanner = new Scanner(new BufferedReader(new FileReader(filename)));
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                parseLine(line, newPlantlist, lineNumber);
-                lineNumber++;
-            }
-
-        } catch (FileNotFoundException e) {
-            throw new PlantException("Soubor " + filename + " nelze otevřít");
-        }
-        return newPlantlist;
-    }
-
-    //Metoda procházení textového souboru a přiřazení jednotlivých parametrů k proměnným
-    public static void parseLine(String line, PlantList plantList, int lineNumber) throws PlantException {
-        String[] blocks = line.split("\\t");
-
-        if (blocks.length != 5) {
-            throw new PlantException("Nesprávný počet položek na řádku: " + line + "! Počet položek: " + blocks.length + ".");
-
-        }
-        String name = blocks[0].trim();
-        String note = blocks[1].trim();
-        int frequencyOfWatering;
-        try {
-            frequencyOfWatering = Integer.parseInt(blocks[2].trim());
-        } catch (NumberFormatException e) {
-            throw new PlantException("Nesprávně zadaný formát intervalu zálivky \"" + blocks[2] + "\" na řádku " + lineNumber + ". Zadaná hodnota musí být celé číslo!");
-        }
-
-        LocalDate watering;
-        try {
-            watering = LocalDate.parse(blocks[3].trim());
-        } catch (DateTimeParseException e) {
-            throw new PlantException("Nesprávně zadaný formát data zálivky \"" + blocks[3] + "\" na řádku " + lineNumber + ". Zadaná hodnota musí být ve formátu YYYY-MM-DD !");
-        }
-
-        LocalDate planted;
-        try {
-            planted = LocalDate.parse(blocks[4].trim());
-        } catch (DateTimeParseException e) {
-            throw new PlantException("Nesprávně zadaný formát data zasazenní \"" + blocks[4] + "\" na řádku " + lineNumber + ". Zadaná hodnota musí být ve formátu YYYY-MM-DD !");
-        }
-
-        Plant newPlant;
-        try {
-            newPlant = new Plant(name, note, planted, watering, frequencyOfWatering);
-        } catch (Plant.PlantException e) {
-            throw new RuntimeException(e);
-        }
-        plantList.addPlant(newPlant);
-    }
-    //Metoda pro uložení seznamu kytek do textového souboru (tabulátory jsou uloženy jako konstanty třídy Settings)
-    public static void saveToFile(String filename, PlantList plantlist) throws PlantException {
-        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(filename)))) {
-            for (Plant plant : plantlist.plantsList) {
-                writer.println(plant.getName() + Settings.getFilePlantDelimiter()
-                        + plant.getNotes() + Settings.getFilePlantDelimiter()
-                        + plant.getFrequencyOfWatering() + Settings.getFilePlantDelimiter()
-                        + plant.getWatering() + Settings.getFilePlantDelimiter()
-                        + plant.getPlanted());
-
-            }
-
-
-        } catch (IOException e) {
-            throw new PlantException("Soubor \"" + filename + "\" se nepodařilo zapsat. " + e.getLocalizedMessage());
-        }
-
-    }
-
 }
