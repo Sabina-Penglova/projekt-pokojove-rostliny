@@ -1,11 +1,9 @@
 import javax.swing.*;
 import java.time.LocalDate;
-import java.util.Collections;
+
 
 public class Main {
-    private int frequencyOfWatering;
-
-    public static void main(String[] args) throws Plant.PlantException {
+    public static void main(String[] args) {
         System.out.println("\n------Pokojové rostliny------");
 
         // Vytvoření seznamu rostlin
@@ -25,7 +23,11 @@ public class Main {
             }
             testPlantList.addPlant(newPlant1);
 
-            testPlantList.removeItem(2);
+            try {
+                testPlantList.removeItem(2);
+            } catch (Plant.PlantException e) {
+                throw new RuntimeException(e);
+            }
 
             // Přidej 10 rostlin s popisem „Tulipán na prodej 1“ až „Tulipán na prodej 10“
             Plant newPlant2;
@@ -46,12 +48,12 @@ public class Main {
 
             // Seřazení listu dle názvu rostliny
             System.out.println("\nSeřazení listu dle názvu květiny:");
-            Collections.sort(newPlantList.getPlantsList());
+            newPlantList.sortByName();
             newPlantList.printWateringInfo();
 
             // Seřazení listu dle data zálivky
             System.out.println("\nSeřazení listu dle data zálivky:");
-            newPlantList.getPlantsList().sort(new WateringDateComparator());
+            newPlantList.sortByWateringDate();
             newPlantList.printWateringInfo();
         }
     }
@@ -59,7 +61,7 @@ public class Main {
     private static String chooseFile() {
         String[] options = {"Správný seznam", "Špatné datum", "Špatná frekvence"};
 
-        var name = JOptionPane.showOptionDialog(null, "Vyber soubor:", "Výběr čteného souboru",
+        int name = JOptionPane.showOptionDialog(null, "Vyber soubor:", "Výběr čteného souboru",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
 
         return switch (name) {
@@ -88,16 +90,5 @@ public class Main {
         } catch (Plant.PlantException e) {
             System.err.println("Chyba při ukládání souboru: " + e.getLocalizedMessage());
         }
-    }
-    public void setFrequencyOfWatering(int frequencyOfWatering) throws PlantException {
-        if (frequencyOfWatering <= 0) {
-            throw new PlantException("Zadaná hodnota frekvence zálivky musí být větší než nula.");
-        }
-        this.frequencyOfWatering = frequencyOfWatering;
-    }
-
-
-    public int getFrequencyOfWatering() {
-        return frequencyOfWatering;
     }
 }

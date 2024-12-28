@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Plant implements Comparable<Plant> {
-    private String name;
+    private  String name;
     private String notes;
     private LocalDate planted;
     private LocalDate watering;
@@ -21,14 +21,6 @@ public class Plant implements Comparable<Plant> {
         this.planted = planted;
         this.watering = watering;
         this.frequencyOfWatering = frequencyOfWatering;
-    }
-
-    public Plant(String name) throws PlantException {
-        this(name, "", LocalDate.now(), LocalDate.now(), 7);
-    }
-
-    public Plant(String name, String notes, LocalDate planted, LocalDate watering) throws PlantException {
-        this(name, notes, planted, watering, 7);
     }
 
     // Přístupové metody
@@ -82,3 +74,4 @@ public class Plant implements Comparable<Plant> {
         return this.name.compareTo(other.name);
     }
 }
+
